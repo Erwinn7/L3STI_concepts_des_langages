@@ -1,0 +1,19 @@
+/*
+    Documentation section
+    @Project TD1 A2 L3 
+    @Author Meldi AHISSOU 
+    @Created 20221010
+    @Program Description, Expressions 
+*/ 
+Soit moy la moyenne des quatres notes 
+moy=(Nlv + Nf + Nm + Np) / 4
+
+1)  moy > 10
+2)  (Nm > moy) and( Nf > moy)
+3)  (Nlv > 10) or (Nf > 10) or (Nm > 10) or (Np > 10)
+4)  (Nlv > 10) and (Nf > 10) and (Nm > 10) and (Np > 10)
+5)  ((Nlv + Nf)/2 = 10) or ((Nm + Np)/2 = 10)
+6)  moy >= 10 and ((Nlv + Nf)/2 = 10 ^ (Nm + Np)/2 = 10)
+
+
+
