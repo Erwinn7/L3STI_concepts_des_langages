@@ -1,2 +1,0 @@
-CODE 1 : erreur lorsqu'on essaie d'affecter une valeur dans t[i] car t est une adresse
-CODE 2 : 

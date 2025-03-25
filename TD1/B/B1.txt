@@ -1,0 +1,11 @@
+CODE 1 : On ne peut pas retourner un pointeur vers une variable locale.L'espace mémoire alloué à la variable locale tab est libérée à la sortie de la fonction et donc on renvoi un "rien" dans t ce qui n'est pas possible . 
+
+CODE 2 : ici la variable P reçoit l'adresse mémoire de x qui qui pointe sur du rien car x est libérée a la sortie de la fonction. 
+
+CODE 3 : ici l'espace mémoire alloué à  la variable ch est déjà libéré et donc ptr contient l'adresse mémoire qui pointe sur rien. 
+
+CODE 4 : pointeur non initialisé . piData est un pointeur mais il ne pointe vers aucune adresse valide.Quand on fait *piData = 10;, on essaie d'écrire dans une adresse mémoire inconnue, ce qui cause une erreur. 
+
+CODE 5: on applique free deux fois sur piData, la première fois cela fontionne mais la deuxième fois il y a erreur car la zone mémoire est déjà libérée.
+
+CODE 6: il n'y a pas d'erreur mais c'est la taille de l'adresse du pointeur qui sera afficher et non la taille du tableau se trouvant dans l'espace mémoire dédié.  
