@@ -27,6 +27,8 @@ typedef struct horaire_De_Train {
 horaire_De_Train *ajouter_horaire(horaire_De_Train *tete);
 void afficher_horaires(horaire_De_Train *tete);
 void afficher_horaires_depart_de(horaire_De_Train *tete, char *ville);
+void affiche_horaire_vmoyMax(horaire_De_Train *tete);
+void liberer_horaires(horaire_De_Train *tete);
 
 //Main function
 int main()
@@ -56,7 +58,6 @@ int main()
 
    // Ajout de plusieurs horaires
    liste_horaires = ajouter_horaire(liste_horaires);
-   printf("%s",liste_horaires);
    liste_horaires = ajouter_horaire(liste_horaires);
 
    // Affichage des horaires
@@ -108,6 +109,7 @@ void afficher_horaires(horaire_De_Train *tete) {
     }
 }
 
+//fonction pour afficher les tains ayant pour départ une ville spécifier  
 void afficher_horaires_depart_de(horaire_De_Train *tete, char *ville){
     horaire_De_Train *courant = tete;
     int trouve = 0;
@@ -143,7 +145,7 @@ void affiche_horaire_vmoyMax(horaire_De_Train *tete){
 }
 
 
-
+// fonction pour libérer les horaires pour éviter les problème de mémoires 
 void liberer_horaires(horaire_De_Train *tete) {
     horaire_De_Train *courant = tete;
     horaire_De_Train *suivant;
