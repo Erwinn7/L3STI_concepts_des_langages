@@ -7,8 +7,10 @@
 */
 
 //Link section
+#include <stdio.h>
+#include <stdlib.h> 
+#include <time.h>   
 #include "ahissoulisteint_v2.h"
-
 
 //Definition section
 
