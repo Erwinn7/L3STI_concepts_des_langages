@@ -9,6 +9,13 @@ typedef struct maillon
     struct maillon *p_suiv;
 } maillon_int;
 
+
+
+/* Affiche le menu et récupère le choix de l'utilisateur
+@input : void
+@output : int, choix de l'utilisateur
+@precondition : Aucune
+@postcondition : Un choix valide est retourné */
 int menu()
 {
     int choix = 0;
@@ -22,19 +29,32 @@ int menu()
            "8 Charger une liste depuis le fichier \"savelist.bin\"\n");
 
     scanf("%d", &choix);
+    // Réinitialiser la position de lecture/écriture du flux standard d'entrée.
     rewind(stdin);
 
     return choix;
 }
 
+
+/* Initialise un élément de liste avec une valeur aléatoire entre 1 et 20
+@input : void
+@output : maillon_int*, pointeur sur le nouvel élément créé
+@precondition : L'allocation mémoire réussit
+@postcondition : Retourne un élément initialisé */
 maillon_int *init_elt()
 {
     maillon_int *p_nv_elt = malloc(sizeof(maillon_int));
-    p_nv_elt->val = rand() % 21;
+    p_nv_elt->val = rand() % 20 + 1;
     p_nv_elt->p_suiv = NULL;
     return p_nv_elt;
-}
+} 
 
+/* Ajoute un élément en tête de liste (version 1)
+@input : maillon_int* p_tete,  tête de liste actuelle
+         maillon_int* p_nv_elt, nouvel élément à ajouter
+@output : maillon_int*, nouvelle tête de liste
+@precondition : p_nv_elt doit être non NULL
+@postcondition : L'élément est ajouté en tête de liste */
 maillon_int *ajout_tete_v1(maillon_int *p_tete, maillon_int *p_nv_elt)
 {
     p_nv_elt->p_suiv = p_tete;
@@ -42,12 +62,24 @@ maillon_int *ajout_tete_v1(maillon_int *p_tete, maillon_int *p_nv_elt)
     return p_tete;
 }
 
+/* Ajoute un élément en tête de liste (version 2, passage par adresse)
+@input : maillon_int** p_p_tete, adresse du pointeur de tête
+         maillon_int* p_nv_elt, nouvel élément à ajouter
+@output : void
+@precondition : p_nv_elt doit être non NULL
+@postcondition : L'élément est ajouté en tête de liste */
 void ajout_tete_v2(maillon_int **p_p_tete, maillon_int *p_nv_elt)
 {
     p_nv_elt->p_suiv = *p_p_tete;
     *p_p_tete = p_nv_elt;
 }
 
+/* Ajoute un élément en tête de liste avec gestion d'erreur
+@input : maillon_int** p_p_tete, adresse du pointeur de tête
+         maillon_int* p_nv_elt, nouvel élément à ajouter
+@output : int, code d'erreur (0 si succès, -1 si échec)
+@precondition : Aucune
+@postcondition : L'élément est ajouté si p_nv_elt est non NULL */
 int ajout_tete_v3(maillon_int **p_p_tete, maillon_int *p_nv_elt)
 {
     int errorCode = -1;
@@ -60,6 +92,11 @@ int ajout_tete_v3(maillon_int **p_p_tete, maillon_int *p_nv_elt)
     return errorCode;
 }
 
+/* Affiche les éléments de la liste
+@input : maillon_int* p_tete, pointeur sur la tête de liste
+@output : void
+@precondition : Aucune
+@postcondition : La liste est affichée */
 void parcourir(maillon_int *p_tete)
 {
     if (p_tete == NULL)
@@ -73,6 +110,12 @@ void parcourir(maillon_int *p_tete)
     putchar('\n');
 }
 
+/* Insère un élément dans la liste triée par ordre croissant
+@input : maillon_int* p_tete, tête de la liste
+         maillon_int* p_nv_elt, nouvel élément à insérer
+@output : maillon_int*, nouvelle tête de la liste
+@precondition : p_nv_elt est non NULL
+@postcondition : L'élément est inséré à la bonne position selon l'ordre croissant */
 maillon_int *inserer1(maillon_int *p_tete, maillon_int *p_nv_elt)
 {
     maillon_int *n, *prec;
@@ -96,6 +139,12 @@ maillon_int *inserer1(maillon_int *p_tete, maillon_int *p_nv_elt)
     return p_tete;
 }
 
+/* Insère un élément dans la liste triée par ordre croissant (passage par adresse)
+@input : maillon_int** prem, adresse du pointeur de tête
+         maillon_int* e, nouvel élément à insérer
+@output : void
+@precondition : e est non NULL
+@postcondition : L'élément est inséré à la bonne position selon l'ordre croissant */
 void inserer2(maillon_int **prem, maillon_int *e)
 {
     maillon_int *n, *prec;
@@ -117,6 +166,11 @@ void inserer2(maillon_int **prem, maillon_int *e)
     }
 }
 
+/* Supprime l'élément de tête de la liste
+@input : maillon_int** prem, adresse du pointeur de tête
+@output : void
+@precondition : Liste potentiellement non vide
+@postcondition : L'élément de tête est supprimé si la liste n'est pas vide */
 void supprimer_debut(maillon_int **prem)
 {
     maillon_int *n;
@@ -128,9 +182,48 @@ void supprimer_debut(maillon_int **prem)
     }
 }
 
-// Fonction supprimer_elt à écrire elle recherche dans une liste
-// une valeur entière passée en paramètres et en supprime toutes les occurences
+/* Supprime toutes les occurrences d'une valeur donnée dans la liste
+@input : maillon_int** prem, adresse du pointeur de tête
+         int valeur, valeur à supprimer
+@output : void
+@precondition : Liste potentiellement non vide
+@postcondition : Tous les éléments de valeur égale à `valeur` sont supprimés */
+void supprimer_elt(maillon_int **prem, int valeur)
+{
+    maillon_int *current = *prem;
+    maillon_int *prev = NULL;
+    
+    while (current != NULL)
+    {
+        if (current->val == valeur)
+        {
+            if (prev == NULL)
+            {
+                *prem = current->p_suiv;
+                free(current);
+                current = *prem;
+            }
+            else
+            {
+                prev->p_suiv = current->p_suiv;
+                free(current);
+                current = prev->p_suiv;
+            }
+        }
+        else
+        {
+            prev = current;
+            current = current->p_suiv;
+        }
+    }
+}
 
+
+/* Détruit entièrement la liste
+@input : maillon_int** prem, adresse du pointeur de tête
+@output : void
+@precondition : Aucune
+@postcondition : Tous les éléments de la liste sont libérés */
 void detruire_liste(maillon_int **prem)
 {
     maillon_int *n;
@@ -142,6 +235,11 @@ void detruire_liste(maillon_int **prem)
     }
 }
 
+/* Détruit entièrement la liste en utilisant `supprimer_debut`
+@input : maillon_int** prem, adresse du pointeur de tête
+@output : void
+@precondition : Aucune
+@postcondition : Tous les éléments de la liste sont libérés */
 void detruire_liste2(maillon_int **prem)
 {
     while (*prem != NULL)
@@ -187,6 +285,11 @@ void sauver_liste(maillon_int *prem)
         fprintf(stderr, "pas de sauvegarde pour une liste vide\n");
 }
 
+/* Charge une liste depuis un fichier binaire "saveliste.bin"
+@input : void
+@output : maillon_int*, pointeur sur la tête de la liste chargée
+@precondition : Le fichier doit exister et contenir une liste valide
+@postcondition : Retourne la liste des éléments stockés dans le fichier */
 maillon_int *load_liste()
 {
     FILE *f;
@@ -210,6 +313,11 @@ maillon_int *load_liste()
     return prem;
 }
 
+/* programme principal
+@input : void
+@output : int, code d'erreur (0 si succès, -1 si échec)
+@precondition : 
+@postcondition : l'opération voulu par l'utilisateur est effectuée */
 int main()
 {
     maillon_int *premier = NULL;
@@ -223,41 +331,57 @@ int main()
         i = menu();
         switch (i)
         {
-
         case 1: // Creer une liste de taille aleatoire
-
+            nb = rand() % 20 + 1;
+            for (int j = 0; j < nb; j++)
+            {
+                nouveau = init_elt();
+                ajout_tete_v2(&premier, nouveau);
+            }
+            parcourir(premier);
             break;
 
-        case 2: // Ajouter
-
+        case 2: // Ajouter un élément en tête
+            nouveau = init_elt();
+            ajout_tete_v2(&premier, nouveau);
+            parcourir(premier);
             break;
 
         case 3: // Inserer (ordre croissant)
-
+            nouveau = init_elt();
+            inserer2(&premier, nouveau);
+            parcourir(premier);
             break;
 
-        case 4: // Supprimer debut:
-
+        case 4: // Supprimer début
+            supprimer_debut(&premier);
+            parcourir(premier);
             break;
 
-        case 5: // Supprimer un maillon d'une valeur donnee
-            // Fonction à écrire...
+        case 5: // Supprimer un maillon d'une valeur donnée
+            printf("Entrer la valeur à supprimer : ");
+            scanf("%d", &nb);
+            rewind(stdin);
+            supprimer_elt(&premier, nb);
+            parcourir(premier);
             break;
 
-        case 6: // detruire liste
-
+        case 6: // Détruire liste
+            detruire_liste2(&premier);
+            parcourir(premier);
             break;
 
         case 7: // Sauver liste
-
+            sauver_liste(premier);
             break;
 
         case 8: // Charger liste
-
+            premier = load_liste();
+            parcourir(premier);
             break;
 
         default:
-
+            fin = 1;
             break;
         }
     }
