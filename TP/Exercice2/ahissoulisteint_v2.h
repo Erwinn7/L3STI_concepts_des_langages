@@ -7,7 +7,7 @@
 */
 
 //Link section
-#include "ahissoulisteint.c"
+#include "ahissoulisteint_v2.c"
 
 
 
@@ -29,6 +29,10 @@ void detruire_liste(maillon_int **prem);
 void detruire_liste2(maillon_int **prem);
 void sauver_liste(maillon_int *prem);
 maillon_int *load_liste();
+bool is_list_empty(maillon_int *prem);
+int sommet_list(maillon_int *prem);
+int retirer_sommet_list(maillon_int **prem);
+void renverser_list(maillon_int *p_tete);
 
 //Main function
 

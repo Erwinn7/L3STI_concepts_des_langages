@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <errno.h> 
+#include <stdbool.h>
 typedef struct maillon
 {
     int val;
@@ -34,7 +35,8 @@ typedef struct maillon
 @postcondition : Retourne un élément initialisé */
 maillon_int *init_elt()
 {
-    maillon_int *p_nv_elt = malloc(sizeof(maillon_int));
+    
+    maillon_int *p_nv_elt = malloc(sizeof(maillon_int)); // Alloue de la mémoire pour un nouvel élément de la liste
     p_nv_elt->val = rand() % 20 + 1;
     p_nv_elt->p_suiv = NULL;
     return p_nv_elt;
@@ -73,14 +75,14 @@ void ajout_tete_v2(maillon_int **p_p_tete, maillon_int *p_nv_elt)
 @postcondition : L'élément est ajouté si p_nv_elt est non NULL */
 int ajout_tete_v3(maillon_int **p_p_tete, maillon_int *p_nv_elt)
 {
-    int errorCode = -1;
-    if (p_nv_elt != NULL)
+    int errorCode = -1; 
+    if (p_nv_elt != NULL) // Vérifier si le nouvel élément n'est pas NULL
     {
-        p_nv_elt->p_suiv = *p_p_tete;
-        *p_p_tete = p_nv_elt;
-        errorCode = 0;
+        p_nv_elt->p_suiv = *p_p_tete; // Lier le nouvel élément à la tête de liste actuelle
+        *p_p_tete = p_nv_elt; // Mettre à jour la tête de liste pour qu'elle pointe sur le nouvel élément
+        errorCode = 0; 
     }
-    return errorCode;
+    return errorCode; 
 }
 
 /* Affiche les éléments de la liste
@@ -91,14 +93,14 @@ int ajout_tete_v3(maillon_int **p_p_tete, maillon_int *p_nv_elt)
 void parcourir(maillon_int *p_tete)
 {
     if (p_tete == NULL)
-        printf("liste vide");
+        printf("liste vide"); 
     else
         while (p_tete != NULL)
         {
-            printf("%d--", p_tete->val);
-            p_tete = p_tete->p_suiv;
+            printf("%d--", p_tete->val); // Affiche la valeur de l'élément courant
+            p_tete = p_tete->p_suiv; // Passe à l'élément suivant
         }
-    putchar('\n');
+    putchar('\n'); 
 }
 
 /* Insère un élément dans la liste triée par ordre croissant
@@ -111,21 +113,23 @@ maillon_int *inserer1(maillon_int *p_tete, maillon_int *p_nv_elt)
 {
     maillon_int *n, *prec;
 
+    // Si la liste est vide ou si la valeur de l'élément à insérer est inférieure ou égale à la valeur du premier élément
     if (p_tete == NULL || p_nv_elt->val <= p_tete->val)
     {
-        p_nv_elt->p_suiv = p_tete;
-        p_tete = p_nv_elt;
+        p_nv_elt->p_suiv = p_tete; // L'élément à insérer devient le premier élément
+        p_tete = p_nv_elt; // Met à jour la tête de liste
     }
     else
     {
         n = prec = p_tete;
+        // Parcourt la liste jusqu'à trouver la position d'insertion
         while (n != NULL && p_nv_elt->val > n->val)
         {
             prec = n;
             n = n->p_suiv;
         }
-        p_nv_elt->p_suiv = n;
-        prec->p_suiv = p_nv_elt;
+        p_nv_elt->p_suiv = n; // Insère l'élément à la bonne position
+        prec->p_suiv = p_nv_elt; // Met à jour le pointeur du précédent élément
     }
     return p_tete;
 }
@@ -139,21 +143,23 @@ maillon_int *inserer1(maillon_int *p_tete, maillon_int *p_nv_elt)
 void inserer2(maillon_int **prem, maillon_int *e)
 {
     maillon_int *n, *prec;
+    // Si la liste est vide ou si la valeur de l'élément à insérer est inférieure ou égale à la valeur du premier élément
     if (*prem == NULL || e->val <= (*prem)->val)
     {
-        e->p_suiv = *prem;
-        *prem = e;
+        e->p_suiv = *prem; // L'élément à insérer devient le premier élément
+        *prem = e; // Met à jour la tête de liste
     }
     else
     {
-        n = prec = *prem;
+        n = prec = *prem; 
+        // Parcourt la liste jusqu'à trouver la position d'insertion
         while (n != NULL && e->val > n->val)
         {
             prec = n;
             n = n->p_suiv;
         }
-        e->p_suiv = n;
-        prec->p_suiv = e;
+        e->p_suiv = n; // Insère l'élément à la bonne position
+        prec->p_suiv = e; // Met à jour le pointeur du précédent élément
     }
 }
 
@@ -168,8 +174,8 @@ void supprimer_debut(maillon_int **prem)
     if (*prem != NULL)
     {
         n = *prem;
-        *prem = (*prem)->p_suiv;
-        free(n);
+        *prem = (*prem)->p_suiv; // Met à jour la tête de liste pour pointer sur l'élément suivant
+        free(n); 
     }
 }
 
@@ -187,21 +193,22 @@ void supprimer_elt(maillon_int **prem, int valeur)
     while (current != NULL)
     {
         if (current->val == valeur)
-        {
-            if (prev == NULL)
+        {   
+            if (prev == NULL) // Si l'élément à supprimer est le premier de la liste
             {
                 *prem = current->p_suiv;
                 free(current);
                 current = *prem;
             }
-            else
+            else // Si l'élément à supprimer est au milieu ou à la fin de la liste
             {
+
                 prev->p_suiv = current->p_suiv;
                 free(current);
                 current = prev->p_suiv;
             }
         }
-        else
+        else // Avancer dans la liste
         {
             prev = current;
             current = current->p_suiv;
@@ -218,11 +225,12 @@ void supprimer_elt(maillon_int **prem, int valeur)
 void detruire_liste(maillon_int **prem)
 {
     maillon_int *n;
+    // Parcourt la liste jusqu'à ce qu'elle soit vide
     while (*prem != NULL)
     {
-        n = *prem;
-        *prem = (*prem)->p_suiv;
-        free(n);
+        n = *prem; 
+        *prem = (*prem)->p_suiv; // Met à jour la tête de liste pour pointer sur l'élément suivant
+        free(n); 
     }
 }
 
@@ -283,23 +291,101 @@ void sauver_liste(maillon_int *prem)
 @postcondition : Retourne la liste des éléments stockés dans le fichier */
 maillon_int *load_liste()
 {
-    FILE *f;
-    maillon_int *prem = NULL, *p, e;
-    if ((f = fopen("saveliste.bin", "rb")) != NULL)
+    FILE *f; 
+    maillon_int *prem = NULL, *p, e; 
+    if ((f = fopen("saveliste.bin", "rb")) != NULL) // Ouverture du fichier binaire en lecture
     {
-        prem = malloc(sizeof(maillon_int));
-        fread(prem, sizeof(maillon_int), 1, f);
-        p = prem;
-        while (fread(&e, sizeof(maillon_int), 1, f))
+        prem = malloc(sizeof(maillon_int)); 
+        fread(prem, sizeof(maillon_int), 1, f); // Lecture du premier élément depuis le fichier
+        p = prem; 
+        while (fread(&e, sizeof(maillon_int), 1, f)) // Lecture des éléments suivants jusqu'à la fin du fichier
         {
-            p->p_suiv = malloc(sizeof(maillon_int));
-            p = p->p_suiv;
-            *p = e;
-            p->p_suiv = NULL;
+            p->p_suiv = malloc(sizeof(maillon_int)); 
+            p = p->p_suiv; 
+            *p = e; 
+            p->p_suiv = NULL; 
         }
-        fclose(f);
+        fclose(f); // Fermeture du fichier
     }
     else
         printf("erreur ou fichier inexistant");
-    return prem;
+    return prem; 
+}
+
+
+/* Vérifie si la liste est vide
+@input : maillon_int* prem, pointeur sur la tête de liste
+@output : bool, true si la liste est vide, false sinon
+@precondition : Aucune
+@postcondition : Retourne true si la liste est vide, false sinon */
+bool is_list_empty(maillon_int *prem)
+{
+    return (prem == NULL);
+}
+
+
+/* Récupère la valeur de l'élément de sommet de liste
+@input : maillon_int* prem, pointeur sur la tête de liste
+@output : int, valeur de l'élément de sommet de liste
+@precondition : La liste n'est pas vide
+@postcondition : Retourne la valeur de l'élément de sommet de pile */
+int sommet_list(maillon_int *prem)
+{
+    if (prem == NULL)
+    {
+        fprintf(stderr, "Erreur: la liste est vide\n");
+        return 1;
+    }
+    return prem->val;
+}
+
+/* Récupère la valeur et enlève l'élément de sommet de pile
+@input : maillon_int** prem, adresse du pointeur de tête de liste
+@output : int, valeur de l'élément de sommet de pile
+@precondition : La liste n'est pas vide
+@postcondition : Retourne la valeur de l'élément de sommet de pile et enlève cet élément de la liste */
+int retirer_sommet_list(maillon_int **prem)
+{
+    // Vérifie si la liste est vide
+    if (*prem == NULL)
+    {
+        fprintf(stderr, "Erreur: la liste est vide\n");
+        return 1;
+    }
+
+    int val = (*prem)->val;
+    // Sauvegarde le pointeur de l'élément de sommet
+    maillon_int *temp = *prem;
+    // Met à jour la tête de liste pour pointer sur l'élément suivant
+    *prem = (*prem)->p_suiv;
+
+    free(temp);
+    
+    return val;
+}
+
+/* Renverse et affiche une liste d'entiers en utilisant une pile
+@input : maillon_int* p_tete, pointeur sur la tête de liste
+@output : void
+@precondition : Aucune
+@postcondition : La liste est renversée et affichée */
+void renverser_list(maillon_int *p_tete)
+{
+    maillon_int *pile = NULL;
+    maillon_int *temp;
+
+    // Parcourt la liste et empile chaque élément
+    while (p_tete != NULL)
+    {
+        temp = p_tete;
+        p_tete = p_tete->p_suiv;
+        temp->p_suiv = pile;
+        pile = temp;
+    }
+
+    // Affiche chaque élément de la pile (qui est maintenant une liste inversée)
+    parcourir(pile);
+
+    // Détruit la liste inversée
+    detruire_liste(&pile);
 }
